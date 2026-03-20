@@ -10,10 +10,7 @@ function requireEnv(key: string): string {
 export const env = {
   port: parseInt(process.env.PORT || "4000", 10),
   mongoUri: requireEnv("MONGO_URI"),
-  redis: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: parseInt(process.env.REDIS_PORT || "6379", 10),
-  },
+  redisUrl: requireEnv("REDIS_URL"),
   geminiApiKey: requireEnv("GEMINI_API_KEY"),
   corsOrigin: process.env.CORS_ORIGIN || "http://localhost:3000",
   uploadDir: process.env.UPLOAD_DIR || "uploads",
