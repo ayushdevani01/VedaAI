@@ -1,12 +1,13 @@
 "use client";
 
-import { Download, Printer, RefreshCcw, Sparkles, Loader2, AlertCircle, Pencil, X } from "lucide-react";
+import { Download, Printer, RefreshCcw, Sparkles, Loader2, AlertCircle, Pencil, X, FileText, GraduationCap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 import { useAppStore } from "@/store/use-app-store";
 import { paperApi, PaperResponse } from "@/lib/api";
 import { useSocket } from "@/hooks/use-socket";
+import { downloadPaperAsPDF } from "@/lib/generate-paper-html";
 
 const suggestions = [
   "Make Section B more application-based",
@@ -303,11 +304,35 @@ export function PaperView({ assignmentId }: { assignmentId: string }) {
           <p className="text-sm text-slate-400">Actions</p>
           <h3 className="mt-1 text-2xl font-bold">Export and print</h3>
           <div className="mt-5 space-y-3">
-            <button onClick={() => window.print()} className="flex w-full items-center justify-between rounded-[22px] bg-slate-50 px-4 py-4 text-left font-semibold text-slate-700">
-              Print paper <Printer className="h-4 w-4" />
+            <button
+              onClick={() =>
+                downloadPaperAsPDF(
+                  paper,
+                  { title: typedPaper.title, subject: typedPaper.subject, grade: typedPaper.grade, topic: typedPaper.topic, chapter: typedPaper.chapter },
+                  "student"
+                )
+              }
+              className="flex w-full items-center justify-between rounded-[22px] bg-slate-50 px-4 py-4 text-left font-semibold text-slate-700 hover:bg-slate-100 transition"
+            >
+              <span className="flex items-center gap-2"><FileText className="h-4 w-4 text-slate-500" /> Student Copy (PDF)</span>
+              <Download className="h-4 w-4" />
             </button>
-            <button onClick={() => window.print()} className="flex w-full items-center justify-between rounded-[22px] bg-slate-950 px-4 py-4 text-left border border-slate-950 font-semibold text-white print:hidden">
-              Download PDF / Print <Download className="h-4 w-4" />
+            <button
+              onClick={() =>
+                downloadPaperAsPDF(
+                  paper,
+                  { title: typedPaper.title, subject: typedPaper.subject, grade: typedPaper.grade, topic: typedPaper.topic, chapter: typedPaper.chapter },
+                  "teacher"
+                )
+              }
+              className="flex w-full items-center justify-between rounded-[22px] bg-orange-50 px-4 py-4 text-left font-semibold text-orange-700 hover:bg-orange-100 transition"
+            >
+              <span className="flex items-center gap-2"><GraduationCap className="h-4 w-4 text-orange-500" /> Teacher Copy (PDF)</span>
+              <Download className="h-4 w-4" />
+            </button>
+            <button onClick={() => window.print()} className="flex w-full items-center justify-between rounded-[22px] bg-slate-950 px-4 py-4 text-left font-semibold text-white hover:bg-slate-800 transition">
+              <span className="flex items-center gap-2"><Printer className="h-4 w-4" /> Print this page</span>
+              <Printer className="h-4 w-4" />
             </button>
           </div>
         </Card>
